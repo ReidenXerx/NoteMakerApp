@@ -5,7 +5,7 @@
       <h2 class="name">{{noteName}}</h2>
       <div class="action-array">
         <div class="circle"><i class="fas fa-pencil-alt"></i></div>
-        <div class="circle"><i class="fas fa-trash-alt"></i></div>
+        <div class="circle" @click="removeNote(index)"><i class="fas fa-trash-alt"></i></div>
       </div>
     </div>
 
@@ -26,25 +26,25 @@ export default {
   name: 'Note',
   props: {
     noteName: String,
-    todos: Array
+    todos: Array,
+    index: Number
   },
-  data() {
-    return {
-    }
-  },
-  functions: {
-    removeNote: () => {
-
+  methods: {
+    removeNote: function(index) {
+      this.$emit('remove-note', index) // generating remote-note event
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+  @import "@/scss/variables.scss";
+
   .note-body {
     width: 300px;
     max-width: 90vw;
-    background: rgb(175, 111, 174);
+    background: $main-color;
     border-radius: 8px;
     padding: 15px;
     margin: 20px 0;
@@ -68,21 +68,21 @@ export default {
         display: flex;
 
         .circle {
-          background: rgb(231, 185, 229);
+          background: $secondary-color;
           width: 20px;
           height: 20px;
           margin: 0 3px;
           font-size: 12px;
 
           &:hover {
-            background: rgb(245, 170, 59);
+            background: $orange;
           }
         }
       } // action-array end
     } // upper end
 
     .todo-list {
-      background: rgb(231, 185, 229);
+      background: $secondary-color;
       border-radius: 8px;
       padding: 10px;
 
@@ -94,11 +94,11 @@ export default {
         padding: 0 10px;
 
         .checkbox {
-          background: rgb(199, 36, 0);
+          background: $red;
         }
 
         .checked {
-          background: rgb(0, 171, 2);
+          background: $green;
         }
 
       } // todo-item end

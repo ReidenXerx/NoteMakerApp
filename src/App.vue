@@ -1,8 +1,11 @@
 <template>
-    <router-view/>
+    <router-view />
 </template>
 
 <style lang="scss">
+
+  @import "@/scss/variables.scss";
+
   @font-face {
     font-family: "Ubuntu";
     src: local("Ubuntu"), url("~@/assets/fonts/Ubuntu-Regular.ttf") format("ttf");
@@ -18,16 +21,17 @@
     src: local("Ubuntu Bold"), url("~@/assets/fonts/Ubuntu-Bold.ttf") format("ttf");
     font-size: 700;
   }
+
   * {
     padding: 0;
     margin: 0;
     transition: 0.5s;
   }
   body {
-    background: rgb(230, 211, 227);
+    background: $purple-white;
     font-family: "Ubuntu", sans-serif;
     letter-spacing: 1px;
-    color: rgb(15, 15, 15);
+    color: $black;
   }
 
   .layout {
