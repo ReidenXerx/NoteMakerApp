@@ -29,11 +29,16 @@ mutations: {
   addNote (state, note) {
     state.notesData.push(note)
   },
-  editNote (state, note, index) {
-    state.notesData[index] = note
+  editNote (state, args) {
+    // args[0] - note, arga[1] - noteid
+    Object.assign(state.notesData[args[1]], args[0], {
+      name: args[0].name,
+      todos: JSON.parse(JSON.stringify(args[0].todos))
+    })
   }
 },
 getters: {
-  getNotesData: (state) => { return state.notesData }
+  getNotesData: (state) => { return state.notesData },
+  getNotesDataId: (state) => (id) => { return state.notesData[id] }
 }
 })

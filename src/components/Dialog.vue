@@ -58,17 +58,6 @@ export default {
         align-items: center;
         padding: 0 20px;
         padding-top: 30px;
-
-        .button {
-          background: $secondary-color;
-          padding: 10px 20px;
-          border-radius: 8px;
-          cursor: pointer;
-          text-transform: uppercase;
-          &:hover {
-            background: $orange;
-          }
-        }
       }
     }
   }

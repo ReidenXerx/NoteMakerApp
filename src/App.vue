@@ -49,4 +49,15 @@
     justify-content: center;
     font-size: 8px;
   }
+
+  .button {
+    background: $secondary-color;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    &:hover {
+      background: $orange;
+    }
+  }
 </style>

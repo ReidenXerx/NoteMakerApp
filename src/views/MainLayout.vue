@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <Note v-for="(note, index) in this.$store.getters.getNotesData"
+    <Note v-for="(note, index) in notes"
     :noteName="note.name"
     :todos="note.todos"
     :index="index"
@@ -21,13 +21,18 @@ import Dialog from '@/components/Dialog.vue'
 
 export default {
   name: 'MainLayout',
+  computed: {
+    notes() {
+      return this.$store.getters.getNotesData;
+    }
+  },
   components: {
     Note, Dialog
   },
   methods: {
     trytoremove: function(index) {
       this.dialog.isActive = true
-      this.dialog.text = "Are you sure you want to remove '" + this.$store.getters.getNotesData[index].name + "' note?"
+      this.dialog.text = "Are you sure you want to remove '" + notes[index].name + "' note?"
       this.dialog.index = index
     },
     removenote: function() {

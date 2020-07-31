@@ -4,7 +4,7 @@
 
       <h2 class="name">{{noteName}}</h2>
       <div class="action-array">
-        <div class="circle"><i class="fas fa-pencil-alt"></i></div>
+        <div class="circle" @click="gotoNote(index)"><i class="fas fa-pencil-alt"></i></div>
         <div class="circle" @click="removeNote(index)"><i class="fas fa-trash-alt"></i></div>
       </div>
     </div>
@@ -32,6 +32,9 @@ export default {
   methods: {
     removeNote: function(index) {
       this.$emit('remove-note', index) // generating remote-note event
+    },
+    gotoNote: function(index) {
+      this.$router.push('/edit/'+index)
     }
   }
 }

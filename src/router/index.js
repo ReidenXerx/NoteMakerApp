@@ -10,7 +10,7 @@ Vue.use(VueRouter)
     component: () => import('../views/MainLayout.vue')
   },
   {
-    path: '/edit',
+    path: '/edit/:id',
     name: 'Edit',
     component: () => import('../views/EditNoteLayout.vue')
   }
