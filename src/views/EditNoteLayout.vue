@@ -16,7 +16,7 @@
             >
               <div v-if="item.isChecked"><i class="fas fa-check"></i></div>
             </div>
-            <div class="circle tech-button" @click="removetodo(id)">
+            <div class="circle tech-button" @click="removeTodo(id)">
               <i class="fas fa-trash-alt"></i>
             </div>
         </div>
@@ -29,30 +29,26 @@
           >
             <div v-if="todoBuf.isChecked"><i class="fas fa-check"></i></div>
           </div>
-          <div class="circle tech-button" @click="addtodo">
+          <div class="circle tech-button" @click="addTodo">
             <i class="fas fa-plus"></i>
           </div>
         </div>
+
       </div>
 
-      <div class="wrap">
-        <div class="button" @click="trytogoback" ><h2>Back</h2></div>
-        <div class="button" @click="savenote" ><h2>Save</h2></div>
+      <div class="wrap end"> <!-- buttons array -->
+        <div class="button" @click="enabledialog(0)" ><i class="fas fa-undo-alt"></i></div>
+        <div class="button" @click="saveNote" ><i class="fas fa-save"></i></div>
+        <div class="button" @click="enabledialog(1)" ><i class="fas fa-trash-alt"></i></div>
       </div>
 
     </div>
 
-    <Dialog
-      :dialogText="dialog[0].text"
-      :isActive="dialog[0].isActive"
-      v-on:confirm-dialog="goback"
-      v-on:reject-dialog="undo" />
-
-    <!-- <Dialog
-      :dialogText="dialog[0].text"
-      :isActive="dialog[0].isActive"
-      v-on:confirm-dialog="goback"
-      v-on:reject-dialog="undo" /> -->
+    <Dialog v-for="(d, i) of dialog"
+      :dialogText="d.text"
+      :isActive="d.isActive"
+      v-on:confirm-dialog="confirmDialog(i)"
+      v-on:reject-dialog="closeAllDialogs" />
 
   </div>
 
@@ -67,50 +63,67 @@ export default {
   computed: {
     noteid() {
       return this.$route.params.id
-    },
-    note() {
-      let buf = this.$store.getters.getNotesDataId(this.noteid)
-      return Object.assign({}, buf, {
-        name: buf.name,
-        todos: JSON.parse(JSON.stringify(buf.todos))
-      })
     }
   },
   components: {
     Dialog
   },
+  created() { // copying selected for editing note in note var
+    let buf = this.$store.getters.getNotesDataId(this.noteid)
+    this.note = Object.assign({}, buf, {
+      name: buf.name,
+      todos: JSON.parse(JSON.stringify(buf.todos))
+    })
+  },
   data() {
     return {
+      note: {},
       todoBuf: { text: '' , isChecked: false },
       dialog: [
         { text: 'Are you sure you want to go back? Any unsaved changes will be lost!', isActive: false },
-        { text: 'Are you sure you want to save changes?', isActive: false }
+        { text: 'Are you sure you want to delete this note?', isActive: false }
       ]
     }
   },
   methods: {
-    trytogoback: function() {
-      this.dialog[0].isActive = true
+    enabledialog: function(id) {
+      this.dialog[id].isActive = true
     },
-    removetodo: function(index) {
+    removeTodo: function(index) {
       this.note.todos.splice(index, 1)
     },
-    addtodo: function() {
+    addTodo: function() {
       this.note.todos.push(Object.assign({}, this.todoBuf))
       this.todoBuf.text = ''
       this.todoBuf.isChecked = false
     },
-    goback: function() {
+    goBack: function() {
       this.$router.push('/')
     },
-    undo: function() {
+    closeAllDialogs: function() {
       this.dialog.forEach(dialog => {
         dialog.isActive = false
       })
     },
-    savenote: function() {
+    saveNote: function() {
       this.$store.commit('editNote', [this.note, this.noteid])
-      let test = this.$store.getters.getNotesData
+    },
+    deleteNote: function() {
+      this.$store.commit('removeNote', this.noteid)
+      this.closeAllDialogs
+      this.$router.push('/')
+    },
+    confirmDialog: function(id) { // function that invoked when dialog confirms
+      switch (id) {
+        case 0:
+          this.goBack()
+          break
+        case 1:
+          this.deleteNote()
+          break
+        default:
+          this.closeAllDialogs()
+      }
     }
   }
 }
@@ -121,10 +134,7 @@ export default {
   @import "@/scss/variables.scss";
 
   .layout {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    background: $purple-white;
     width: 100vw;
     height: 100vh;
 
@@ -169,6 +179,11 @@ export default {
     justify-content: space-between;
     width: #{'min(350px, 70vw)'};
     margin: 10px 0;
+  }
+
+  .end {
+    margin-top: auto;
+    margin-bottom: 10px;
   }
 
   .checkbox {

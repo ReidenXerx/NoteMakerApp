@@ -29,6 +29,12 @@ mutations: {
   addNote (state, note) {
     state.notesData.push(note)
   },
+  addEmptyNote (state) {
+    state.notesData.push({
+      name: '',
+      todos: []
+    })
+  },
   editNote (state, args) {
     // args[0] - note, arga[1] - noteid
     Object.assign(state.notesData[args[1]], args[0], {
