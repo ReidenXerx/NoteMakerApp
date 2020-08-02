@@ -37,9 +37,11 @@
       </div>
 
       <div class="wrap end"> <!-- buttons array -->
-        <div class="button" @click="enabledialog(0)" ><i class="fas fa-undo-alt"></i></div>
+        <div class="button" @click="enableDialog(0)" ><i class="fas fa-undo-alt"></i></div>
         <div class="button" @click="saveNote" ><i class="fas fa-save"></i></div>
-        <div class="button" @click="enabledialog(1)" ><i class="fas fa-trash-alt"></i></div>
+        <div class="button" @click="enableDialog(1)" ><i class="fas fa-trash-alt"></i></div>
+        <div class="button" @click="undoOrRedoAction('undo')" >undo</div>
+        <div class="button" @click="undoOrRedoAction('redo')" >redo</div>
       </div>
 
     </div>
@@ -86,7 +88,7 @@ export default {
     }
   },
   methods: {
-    enabledialog: function(id) {
+    enableDialog: function(id) {
       this.dialog[id].isActive = true
     },
     removeTodo: function(index) {
@@ -98,6 +100,7 @@ export default {
       this.todoBuf.isChecked = false
     },
     goBack: function() {
+      this.$store.commit('flushHistory')
       this.$router.push('/')
     },
     closeAllDialogs: function() {
@@ -106,12 +109,19 @@ export default {
       })
     },
     saveNote: function() {
-      this.$store.commit('editNote', [this.note, this.noteid])
+      this.$store.dispatch('editNoteWithHistory', [this.note, this.noteid])
+      //this.$store.commit('editNote', [this.note, this.noteid])
     },
     deleteNote: function() {
       this.$store.commit('removeNote', this.noteid)
       this.closeAllDialogs
       this.$router.push('/')
+    },
+    undoOrRedoAction: function(str) {
+      this.$store.dispatch(str).then((resolved) => {
+        if(!(Object.keys(resolved).length === 0 && resolved.constructor === Object))
+          this.note = resolved
+      })
     },
     confirmDialog: function(id) { // function that invoked when dialog confirms
       switch (id) {
