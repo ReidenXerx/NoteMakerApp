@@ -29,7 +29,7 @@ state: {
     ]
   }],
   history: [],
-  historyFirst: {},
+  historyLast: {},
   pointer: 0
 },
 mutations: {
@@ -48,14 +48,14 @@ mutations: {
   flushHistory (state) {
     state.history = []
     state.pointer = 0
-    state.historyFirst = {}
+    state.historyLast = {}
   },
   addToHistory (state, obj) {
     state.history.push(copyNote(obj))
     state.pointer++
   },
-  addToHistoryFirst (state, obj) {
-    state.historyFirst = copyNote(obj)
+  addToHistoryLast (state, obj) {
+    state.historyLast = copyNote(obj)
     //state.pointer++
   },
   pointerpp (state) {
@@ -88,19 +88,17 @@ actions: {
       context.commit('pointerpp')
       let historySlide
       if(context.getters.getPointer === context.getters.getHistory.length) {
-        historySlide = copyNote(context.getters.getHistoryFirst)
+        historySlide = copyNote(context.getters.getHistoryLast) // getting last note change in history
       } else
         historySlide = copyNote(context.getters.getHistoryId(context.getters.getPointer))
-      console.log(historySlide, context.getters.getPointer, 'redo')
+      console.log(historySlide, context.getters.getPointer, 'redo') // getting note in history array
       resolve(historySlide)
     })
   },
   editNoteWithHistory (context, args) {
-    if(context.getters.getNotesData.length == 0) {
-      context.commit('addToHistoryFirst', args[0])
-    }
-    context.commit('addToHistory', context.getters.getNotesDataId([args[1]]))
-    context.commit('editNote', args)
+    context.commit('addToHistoryLast', args[0]) // saving last note change in history
+    context.commit('addToHistory', context.getters.getNotesDataId([args[1]])) // saving note pre-change state
+    context.commit('editNote', args) // making change in note
 
 
   }
@@ -111,6 +109,6 @@ getters: {
   getHistory: (state) => { return state.history },
   getHistoryId: (state) => (id) => { return state.history.length > 0 ? state.history[id] : {} },
   getPointer: (state) => { return state.pointer },
-  getHistoryFirst: (state) => { return state.historyFirst }
+  getHistoryLast: (state) => { return state.historyLast }
 }
 })
