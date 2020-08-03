@@ -38,10 +38,10 @@
 
       <div class="wrap end"> <!-- buttons array -->
         <div class="button" @click="enableDialog(0)" ><i class="fas fa-undo-alt"></i></div>
-        <div class="button" @click="saveNote" ><i class="fas fa-save"></i></div>
-        <div class="button" @click="enableDialog(1)" ><i class="fas fa-trash-alt"></i></div>
         <div class="button" @click="undoOrRedoAction('undo')" ><i class="fas fa-backward"></i></div>
         <div class="button" @click="undoOrRedoAction('redo')" ><i class="fas fa-forward"></i></div>
+        <div class="button" @click="enableDialog(1)" ><i class="fas fa-trash-alt"></i></div>
+        <div class="button" @click="saveNote" ><i class="fas fa-save"></i></div>
       </div>
 
     </div>
