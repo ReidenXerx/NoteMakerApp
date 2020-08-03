@@ -1,19 +1,19 @@
 <template>
-  <div class="layout">
+  <div class="layout"> <!-- main page with all notes -->
 
     <Note v-for="(note, index) in notes"
     :noteName="note.name"
     :todos="note.todos"
     :index="index"
-    v-on:remove-note="tryToRemove" />
+    v-on:remove-note="tryToRemove" /> <!-- notes array -->
 
-    <div class="button" @click="createNote"><i class="fas fa-plus"></i></div>
+    <div class="button" @click="createNote"><i class="fas fa-plus"></i></div> <!-- new note -->
 
     <Dialog
       :dialogText="dialog.text"
       :isActive="dialog.isActive"
       v-on:confirm-dialog="removeNote"
-      v-on:reject-dialog="undoRemoving" />
+      v-on:reject-dialog="undoRemoving" /> <!-- delete note dialog -->
   </div>
 </template>
 
@@ -33,19 +33,19 @@ export default {
     Note, Dialog
   },
   methods: {
-    tryToRemove: function(index) {
+    tryToRemove: function(index) { // method opens dialog that asks about delete the note
       this.dialog.isActive = true
       this.dialog.text = "Are you sure you want to remove '" + this.notes[index].name + "' note?"
       this.dialog.index = index
     },
-    removeNote: function() {
+    removeNote: function() { // if you click yes, this method invokes and note removes
       this.$store.commit('removeNote', this.dialog.index)
       this.dialog.isActive = false
     },
-    undoRemoving: function() {
+    undoRemoving: function() { // if you click no, this method invokes and dialog closes
       this.dialog.isActive = false
     },
-    createNote: function() {
+    createNote: function() { // method creates empty note object and routes you to editing it
       const index = this.notes.length
       this.$store.commit('addEmptyNote')
       this.$router.push('/edit/'+index)
@@ -53,7 +53,7 @@ export default {
   },
   data() {
     return {
-      dialog: {
+      dialog: { // dialog params
         text: '',
         isActive: false,
         index: -1

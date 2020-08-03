@@ -4,6 +4,8 @@
 
 <style lang="scss">
 
+// general for all styles
+
   @import "@/scss/variables.scss";
 
   @font-face {
@@ -55,6 +57,9 @@
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-transform: uppercase;
     &:hover {
       background: $orange;

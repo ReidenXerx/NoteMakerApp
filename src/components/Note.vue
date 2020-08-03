@@ -1,16 +1,16 @@
-<template lang="html">
+<template lang="html"> <!-- note item -->
   <div class="note-body">
     <div class="upper">
 
       <h2 class="name">{{noteName}}</h2>
       <div class="action-array">
-        <div class="circle" @click="gotoNote(index)"><i class="fas fa-pencil-alt"></i></div>
-        <div class="circle" @click="removeNote(index)"><i class="fas fa-trash-alt"></i></div>
+        <div class="circle" @click="gotoNote(index)"><i class="fas fa-pencil-alt"></i></div> <!-- edit note -->
+        <div class="circle" @click="removeNote(index)"><i class="fas fa-trash-alt"></i></div> <!-- delete note -->
       </div>
     </div>
 
       <div class="todo-list">
-        <div class="todo-item" v-for="item in todos">
+        <div class="todo-item" v-for="item in todos"> <!-- todos array -->
           <p class="todo-text">{{item.text}}</p>
           <div class="checkbox circle" v-bind:class="{'checked': item.isChecked}">
             <i class="fas fa-check" v-if="item.isChecked"></i>
@@ -34,7 +34,7 @@ export default {
       this.$emit('remove-note', index) // generating remote-note event
     },
     gotoNote: function(index) {
-      this.$router.push('/edit/'+index)
+      this.$router.push('/edit/'+index) // routes to edit note page
     }
   }
 }

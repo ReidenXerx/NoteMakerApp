@@ -4,10 +4,10 @@
 
       <div class="wrap">
         <h2>Title</h2>
-        <input type="text" class="input" v-model="note.name">
+        <input type="text" class="input" v-model="note.name"> <!-- note title -->
       </div>
 
-      <div class="todos"> <!-- todos -->
+      <div class="todos"> <!-- todos array -->
         <div class="wrap" v-for="(item, id) in note.todos">
           <input type="text" class="input" v-model="item.text">
             <div class="circle checkbox"
@@ -17,7 +17,7 @@
               <div v-if="item.isChecked"><i class="fas fa-check"></i></div>
             </div>
             <div class="circle tech-button" @click="removeTodo(id)">
-              <i class="fas fa-trash-alt"></i>
+              <i class="fas fa-trash-alt"></i> <!-- remove todo -->
             </div>
         </div>
 
@@ -26,10 +26,10 @@
           <div class="circle checkbox"
             v-bind:class="{'checked': todoBuf.isChecked}"
             @click="todoBuf.isChecked = !todoBuf.isChecked"
-          >
+          > <!-- todo toggle -->
             <div v-if="todoBuf.isChecked"><i class="fas fa-check"></i></div>
           </div>
-          <div class="circle tech-button" @click="addTodo">
+          <div class="circle tech-button" @click="addTodo"> <!-- add new todo button -->
             <i class="fas fa-plus"></i>
           </div>
         </div>
@@ -40,8 +40,8 @@
         <div class="button" @click="enableDialog(0)" ><i class="fas fa-undo-alt"></i></div>
         <div class="button" @click="saveNote" ><i class="fas fa-save"></i></div>
         <div class="button" @click="enableDialog(1)" ><i class="fas fa-trash-alt"></i></div>
-        <div class="button" @click="undoOrRedoAction('undo')" >undo</div>
-        <div class="button" @click="undoOrRedoAction('redo')" >redo</div>
+        <div class="button" @click="undoOrRedoAction('undo')" ><i class="fas fa-backward"></i></div>
+        <div class="button" @click="undoOrRedoAction('redo')" ><i class="fas fa-forward"></i></div>
       </div>
 
     </div>
@@ -50,7 +50,7 @@
       :dialogText="d.text"
       :isActive="d.isActive"
       v-on:confirm-dialog="confirmDialog(i)"
-      v-on:reject-dialog="closeAllDialogs" />
+      v-on:reject-dialog="closeAllDialogs" /> <!-- dialogs array depending on event -->
 
   </div>
 
@@ -64,7 +64,7 @@ export default {
   name: 'EditNoteLayout',
   computed: {
     noteid() {
-      return this.$route.params.id
+      return this.$route.params.id // current note id
     }
   },
   components: {
@@ -79,28 +79,28 @@ export default {
   },
   data() {
     return {
-      note: {},
-      todoBuf: { text: '' , isChecked: false },
-      dialog: [
+      note: {}, // object for current note that is filled in created()
+      todoBuf: { text: '' , isChecked: false }, // vars for adding new todos
+      dialog: [ // dialog texts depending on events being triggered
         { text: 'Are you sure you want to go back? Any unsaved changes will be lost!', isActive: false },
         { text: 'Are you sure you want to delete this note?', isActive: false }
       ]
     }
   },
   methods: {
-    enableDialog: function(id) {
+    enableDialog: function(id) { // open dialog
       this.dialog[id].isActive = true
     },
-    removeTodo: function(index) {
+    removeTodo: function(index) { // remove todo in list
       this.note.todos.splice(index, 1)
     },
-    addTodo: function() {
+    addTodo: function() { // add new todo in list
       this.note.todos.push(Object.assign({}, this.todoBuf))
       this.todoBuf.text = ''
       this.todoBuf.isChecked = false
     },
-    goBack: function() {
-      this.$store.commit('flushHistory')
+    goBack: function() { // return back to main layout
+      this.$store.commit('flushHistory') // clear history of changes for the note
       this.$router.push('/')
     },
     closeAllDialogs: function() {
@@ -108,7 +108,7 @@ export default {
         dialog.isActive = false
       })
     },
-    saveNote: function() {
+    saveNote: function() { // save note (look at vuex/index.js)
       this.$store.dispatch('editNoteWithHistory', [this.note, this.noteid])
       //this.$store.commit('editNote', [this.note, this.noteid])
     },
@@ -117,14 +117,14 @@ export default {
       this.closeAllDialogs
       this.$router.push('/')
     },
-    undoOrRedoAction: function(str) {
+    undoOrRedoAction: function(str) { // history navigation, str='undo' for back or str='redo' for forward
       this.$store.dispatch(str).then((resolved) => {
         if(!(Object.keys(resolved).length === 0 && resolved.constructor === Object))
           this.note = resolved
       })
     },
     confirmDialog: function(id) { // function that invoked when dialog confirms
-      switch (id) {
+      switch (id) { // id depends on dialog array items index in data()
         case 0:
           this.goBack()
           break
@@ -132,7 +132,7 @@ export default {
           this.deleteNote()
           break
         default:
-          this.closeAllDialogs()
+          this.closeAllDialogs() // this shouldn`t happen if everything is OK
       }
     }
   }
@@ -167,6 +167,7 @@ export default {
         border-radius: 8px;
         border: none;
         height: 30px;
+        max-width: 40vw;
         padding: 0 20px;
         font-family: inherit;
         font-size: 14px;
@@ -194,6 +195,11 @@ export default {
   .end {
     margin-top: auto;
     margin-bottom: 10px;
+    flex-wrap: wrap;
+    .button {
+      margin: 10px;
+      flex-grow: 1;
+    }
   }
 
   .checkbox {

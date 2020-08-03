@@ -1,12 +1,12 @@
-<template lang="html">
+<template lang="html"> <!-- dialog window -->
   <div class="dialog-surrounding" @click.self="no" v-if="isActive">
     <div class="dialog-body">
 
       <h2>{{dialogText}}</h2>
 
       <div class="dialog-basement">
-        <div class="button" @click="yes" ><h2>Yes</h2></div>
-        <div class="button" @click="no" ><h2>No</h2></div>
+        <div class="button" @click="yes" ><h2>Yes</h2></div> <!-- emits positive event -->
+        <div class="button" @click="no" ><h2>No</h2></div> <!-- emits negative event -->
       </div>
 
     </div>
@@ -18,14 +18,14 @@ export default {
   name: 'Dialog',
   props: {
     dialogText: String,
-    isActive: Boolean
+    isActive: Boolean // true if dialog is opened
   },
   methods: {
     yes: function() {
-      this.$emit('confirm-dialog')
+      this.$emit('confirm-dialog') //emits positive event
     },
     no: function() {
-      this.$emit('reject-dialog')
+      this.$emit('reject-dialog') //emits negative event
     }
   }
 }
